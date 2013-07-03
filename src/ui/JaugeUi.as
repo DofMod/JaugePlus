@@ -229,11 +229,12 @@ package ui
 			
 			paramMenu.push(modContextMenu.createContextMenuItemObject("Tooltip courante :", null, null, true, null, false, false));
 			paramMenu.push(modContextMenu.createContextMenuSeparatorObject());
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher pourcentage', contextMenuCallback, new Array(ID_SUBMENU, ID_PERCENT), false, null, _infosDisplayed[_selectedGauge][ID_PERCENT], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher restant', contextMenuCallback, new Array(ID_SUBMENU, ID_REMAINING), false, null, _infosDisplayed[_selectedGauge][ID_REMAINING], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher effectué', contextMenuCallback, new Array(ID_SUBMENU, ID_DONE), false, null, _infosDisplayed[_selectedGauge][ID_DONE], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher maximum', contextMenuCallback, new Array(ID_SUBMENU, ID_MAXIMUM), false, null, _infosDisplayed[_selectedGauge][ID_MAXIMUM], true));
-			mainMenu.push(modContextMenu.createContextMenuItemObject("Paramètres", null, null, false, paramMenu, false, true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher pourcentage',	contextMenuCallback, new Array(ID_SUBMENU, ID_PERCENT),		false, null, _infosDisplayed[_selectedGauge][ID_PERCENT]));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher restant',		contextMenuCallback, new Array(ID_SUBMENU, ID_REMAINING),	false, null, _infosDisplayed[_selectedGauge][ID_REMAINING]));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher effectué',		contextMenuCallback, new Array(ID_SUBMENU, ID_DONE),		false, null, _infosDisplayed[_selectedGauge][ID_DONE]));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher maximum',		contextMenuCallback, new Array(ID_SUBMENU, ID_MAXIMUM),		false, null, _infosDisplayed[_selectedGauge][ID_MAXIMUM]));
+			
+			mainMenu.push(modContextMenu.createContextMenuItemObject("Paramètres", null, null, false, paramMenu, false));
 			mainMenu.push(modContextMenu.createContextMenuSeparatorObject());
 			
 			var gaugeData:GaugeData;
