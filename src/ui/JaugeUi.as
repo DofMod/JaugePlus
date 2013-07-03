@@ -54,12 +54,17 @@ package ui
 		private static const ID_JOB4:int = 9;
 		private static const ID_JOB5:int = 10;
 		private static const ID_JOB6:int = 11;
+		private static const NB_ITEM:int = 11;
+		
 		private static const ID_PERCENT:int = 0;
 		private static const ID_REMAINING:int = 1;
 		private static const ID_DONE:int = 2;
 		private static const ID_MAXIMUM:int = 3;
+		private static const NB_OPTION:int = 3;
+		
 		private static const SELECTED_GAUGE_ID:String = "selectedGaugeId";
 		private static const INFOS_DISPLAYED:String = "infosDisplayed";
+		
 		private static const XP_GAUGE:uint = 0;
 		private static const GUILD_GAUGE:uint = 1;
 		private static const MOUNT_GAUGE:uint = 2;
@@ -218,8 +223,6 @@ package ui
 			//Génération du menu contextuel
 			var mainMenu:Array = new Array();
 			var paramMenu:Array = new Array();
-			var coche:Boolean = new Boolean();
-			var i:int = 0;
 			
 			paramMenu.push(modContextMenu.createContextMenuItemObject("Tooltip courante :", null, null, true, null, false, false));
 			paramMenu.push(modContextMenu.createContextMenuSeparatorObject());
@@ -230,26 +233,18 @@ package ui
 			mainMenu.push(modContextMenu.createContextMenuItemObject("Paramètres", null, null, false, paramMenu, false, true));
 			mainMenu.push(modContextMenu.createContextMenuSeparatorObject());
 			
-			while (i != 13)
+			var gaugeData:GaugeData;
+			for (var gaugeId:int = 0; gaugeId <= NB_ITEM; gaugeId++)
 			{
-				if (i == _selectedGauge)
-				{
-					coche = true;
-				}
+				gaugeData = getGaugeData(gaugeId);
 				
-				var donnees:GaugeData = getGaugeData(i);
-				
-				if (donnees.visible)
+				if (gaugeData.visible)
 				{
-					mainMenu.push(modContextMenu.createContextMenuItemObject(donnees.title, contextMenuCallback, new Array(1, i), donnees.disabled, null, coche, true, composeTooltip(i)));
+					mainMenu.push(modContextMenu.createContextMenuItemObject(gaugeData.title, contextMenuCallback, new Array(1, gaugeId), gaugeData.disabled, null, (gaugeId == _selectedGauge), true, composeTooltip(gaugeId)));
 				}
-				donnees = null;
-				coche = false;
-				i++;
 			}
 			
 			return mainMenu;
-		
 		}
 		
 		private function contextMenuCallback(menu:int, item:int):void
