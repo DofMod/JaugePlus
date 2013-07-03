@@ -74,6 +74,9 @@ package ui
 		private static const JOB_GAUGE:uint = 6;
 		private static const NB_GAUGE:uint = 6;
 		
+		private static const ID_MENU:int = 0;
+		private static const ID_SUBMENU:int = 1;
+		
 		// APIs
 		public var sysApi:SystemApi;
 		public var uiApi:UiApi;
@@ -170,7 +173,7 @@ package ui
 				_infosDisplayed[ID_XP_MOUNT]		= [true, true, false, false];
 				
 				_infosDisplayed[ID_HONOUR]	= [true, true, false, false];
-				_infosDisplayed[ID_PODS]		= [false, true, false, true];
+				_infosDisplayed[ID_PODS]	= [false, true, false, true];
 				_infosDisplayed[ID_ENERGY]	= [false, true, false, true];
 				
 				_infosDisplayed[ID_JOB1] = [true, true, false, false];
@@ -226,10 +229,10 @@ package ui
 			
 			paramMenu.push(modContextMenu.createContextMenuItemObject("Tooltip courante :", null, null, true, null, false, false));
 			paramMenu.push(modContextMenu.createContextMenuSeparatorObject());
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher pourcentage', contextMenuCallback, new Array(2, 0), false, null, _infosDisplayed[_selectedGauge][ID_PERCENT], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher restant', contextMenuCallback, new Array(2, 1), false, null, _infosDisplayed[_selectedGauge][ID_REMAINING], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher effectué', contextMenuCallback, new Array(2, 2), false, null, _infosDisplayed[_selectedGauge][ID_DONE], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher maximum', contextMenuCallback, new Array(2, 3), false, null, _infosDisplayed[_selectedGauge][ID_MAXIMUM], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher pourcentage', contextMenuCallback, new Array(ID_SUBMENU, ID_PERCENT), false, null, _infosDisplayed[_selectedGauge][ID_PERCENT], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher restant', contextMenuCallback, new Array(ID_SUBMENU, ID_REMAINING), false, null, _infosDisplayed[_selectedGauge][ID_REMAINING], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher effectué', contextMenuCallback, new Array(ID_SUBMENU, ID_DONE), false, null, _infosDisplayed[_selectedGauge][ID_DONE], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher maximum', contextMenuCallback, new Array(ID_SUBMENU, ID_MAXIMUM), false, null, _infosDisplayed[_selectedGauge][ID_MAXIMUM], true));
 			mainMenu.push(modContextMenu.createContextMenuItemObject("Paramètres", null, null, false, paramMenu, false, true));
 			mainMenu.push(modContextMenu.createContextMenuSeparatorObject());
 			
@@ -240,27 +243,27 @@ package ui
 				
 				if (gaugeData.visible)
 				{
-					mainMenu.push(modContextMenu.createContextMenuItemObject(gaugeData.title, contextMenuCallback, new Array(1, gaugeId), gaugeData.disabled, null, (gaugeId == _selectedGauge), true, composeTooltip(gaugeId)));
+					mainMenu.push(modContextMenu.createContextMenuItemObject(gaugeData.title, contextMenuCallback, new Array(ID_MENU, gaugeId), gaugeData.disabled, null, (gaugeId == _selectedGauge), true, composeTooltip(gaugeId)));
 				}
 			}
 			
 			return mainMenu;
 		}
 		
-		private function contextMenuCallback(menu:int, item:int):void
+		private function contextMenuCallback(menuId:int, item:int):void
 		{
-			//Callback du menu contextuel
-			if (menu == 1)
+			if (menuId == ID_MENU)
 			{
-				
 				sysApi.setData(SELECTED_GAUGE_ID, item);
+				
 				_selectedGauge = item;
+				
 				onHook();
 			}
-			//Si un item de param a été cliqué :
-			else if (menu == 2)
+			else if (menuId == ID_SUBMENU)
 			{
 				_infosDisplayed[_selectedGauge][item] = !_infosDisplayed[_selectedGauge][item];
+				
 				sysApi.setData(INFOS_DISPLAYED, _infosDisplayed);
 			}
 		}
