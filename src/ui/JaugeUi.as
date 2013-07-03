@@ -175,7 +175,7 @@ package ui
 			}
 			
 			var selectedGaugeId:int = sysApi.getData(SELECTED_GAUGE_ID);
-			var selectedGaugeDatas:GaugeData = recupDonnees(selectedGaugeId);
+			var selectedGaugeDatas:GaugeData = getGaugeData(selectedGaugeId);
 			if (!selectedGaugeDatas.disabled && selectedGaugeDatas.visible)
 			{
 				_selectedGauge = selectedGaugeId;
@@ -229,7 +229,7 @@ package ui
 					coche = true;
 				}
 				
-				var donnees:GaugeData = recupDonnees(i);
+				var donnees:GaugeData = getGaugeData(i);
 				
 				if (donnees.visible)
 				{
@@ -265,7 +265,7 @@ package ui
 		private function composeTooltip(idDonnee:int):String
 		{
 			//Génération du tooltip en fonction des préférences
-			var donnees:GaugeData = recupDonnees(idDonnee);
+			var donnees:GaugeData = getGaugeData(idDonnee);
 			var donneesAff:Array = _infosDisplayed[idDonnee];
 			
 			var pourcentage:String;
@@ -347,13 +347,13 @@ package ui
 		
 		}
 		
-		private function recupDonnees(idDonnees:int):GaugeData
+		private function getGaugeData(gaugeId:int):GaugeData
 		{
 			var gaugeData:GaugeData = new GaugeData();
 			
-			var caract:Object = persoApi.characteristics();
+			var characteristics:CharacterCharacteristicsInformations = persoApi.characteristics();
 			
-			switch (idDonnees)
+			switch (gaugeId)
 			{
 				case ID_XP_CHARACTER:
 					
@@ -362,9 +362,9 @@ package ui
 					gaugeData.title= "Xp personnage";
 					gaugeData.color = 0;
 					
-					gaugeData.current = caract.experience;
-					gaugeData.floor = caract.experienceLevelFloor;
-					gaugeData.ceil = caract.experienceNextLevelFloor;
+					gaugeData.current = characteristics.experience;
+					gaugeData.floor = characteristics.experienceLevelFloor;
+					gaugeData.ceil = characteristics.experienceNextLevelFloor;
 					
 					break;
 				case ID_XP_GUILD:
@@ -376,12 +376,11 @@ package ui
 					
 					if (!gaugeData.disabled)
 					{
+						var guildInfos:Object = socApi.getGuild();
 						
-						var guilde:Object = socApi.getGuild();
-						
-						gaugeData.current = guilde.experience;
-						gaugeData.floor = guilde.expLevelFloor;
-						gaugeData.ceil = guilde.expNextLevelFloor;
+						gaugeData.current = guildInfos.experience;
+						gaugeData.floor = guildInfos.expLevelFloor;
+						gaugeData.ceil = guildInfos.expNextLevelFloor;
 					}
 					
 					break;
@@ -394,12 +393,11 @@ package ui
 					
 					if (!gaugeData.disabled)
 					{
+						var mountInfos:Object = persoApi.getMount();
 						
-						var monture:Object = persoApi.getMount();
-						
-						gaugeData.current = monture.experience;
-						gaugeData.floor = monture.experienceForLevel;
-						gaugeData.ceil = monture.experienceForNextLevel;
+						gaugeData.current = mountInfos.experience;
+						gaugeData.floor = mountInfos.experienceForLevel;
+						gaugeData.ceil = mountInfos.experienceForNextLevel;
 					}
 					
 					break;
@@ -412,13 +410,9 @@ package ui
 					
 					if (!gaugeData.disabled)
 					{
-						
-						var caractInfos:CharacterCharacteristicsInformations = fightApi.getCurrentPlayedCharacteristicsInformations();
-						var alignement:ActorExtendedAlignmentInformations = caractInfos.alignmentInfos;
-						
-						gaugeData.current = alignement.honor;
-						gaugeData.floor = alignement.honorGradeFloor;
-						gaugeData.ceil = alignement.honorNextGradeFloor;
+						gaugeData.current = characteristics.alignmentInfos.honor;
+						gaugeData.floor = characteristics.alignmentInfos.honorGradeFloor;
+						gaugeData.ceil = characteristics.alignmentInfos.honorNextGradeFloor;
 					}
 					
 					break;
@@ -441,34 +435,32 @@ package ui
 					gaugeData.title = "Energie";
 					gaugeData.color = 5;
 					
-					gaugeData.current = caract.energyPoints;
+					gaugeData.current = characteristics.energyPoints;
 					gaugeData.floor = 0;
-					gaugeData.ceil = caract.maxEnergyPoints;
+					gaugeData.ceil = characteristics.maxEnergyPoints;
 					
 					break;
 				default: 
-					//Récupération des infos pour les métiers
-					var listMetier:Object = persoApi.getJobs();
-					var i:int = 0;
-					var nbMetier:int = 0;
+					var jobList:Object = persoApi.getJobs();
+					var jobIndex:int = 0;
 					
-					for each (var metier:KnownJob in listMetier)
+					for each (var job:KnownJob in jobList)
 					{
-						if (i + 6 == idDonnees)
+						if (jobIndex + 6 == gaugeId)
 						{
-							
 							gaugeData.disabled = false;
 							gaugeData.visible = true;
-							gaugeData.title = "Xp " + metierApi.getJobName(metier.jobDescription.jobId);
+							gaugeData.title = "Xp " + metierApi.getJobName(job.jobDescription.jobId);
 							gaugeData.color = 5;
 							
-							var xpMetier:JobExperience = metier.jobExperience;
-							gaugeData.current = xpMetier.jobXP;
-							gaugeData.floor = xpMetier.jobXpLevelFloor;
-							gaugeData.ceil = xpMetier.jobXpNextLevelFloor;
-							nbMetier++;
+							var jobExperience:JobExperience = job.jobExperience;
+							
+							gaugeData.current = jobExperience.jobXP;
+							gaugeData.floor = jobExperience.jobXpLevelFloor;
+							gaugeData.ceil = jobExperience.jobXpNextLevelFloor;
 						}
-						i++;
+						
+						jobIndex++;
 					}
 					
 					break;
