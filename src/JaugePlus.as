@@ -2,6 +2,7 @@ package
 {
 	import d2api.SystemApi;
 	import d2api.UiApi;
+	import d2enums.StrataEnum;
 	import d2hooks.GameStart;
 	import flash.display.Sprite;
 	import ui.JaugeUi;
@@ -48,7 +49,7 @@ package
 		{
 			if (!uiApi.getUi(UI_INSTANCE_NAME))
 			{
-				uiApi.loadUi(UI_NAME, UI_INSTANCE_NAME);
+				uiApi.loadUi(UI_NAME, UI_INSTANCE_NAME, null, StrataEnum.STRATA_HIGH);
 			}
 		}
 	}
