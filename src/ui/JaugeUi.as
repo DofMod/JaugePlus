@@ -340,11 +340,9 @@ package ui
 		
 		private function onHook(... arguments:Array):void
 		{
+			var gaugeData:GaugeData = getGaugeData(_selectedGauge);
 			
-			//Lorsqu'un changement intervient, on récupére les données correspondantes et on les affiches
-			var donnees:GaugeData = recupDonnees(_selectedGauge);
-			majJauge(donnees.floor, donnees.current, donnees.ceil, donnees.color);
-		
+			majJauge(gaugeData.floor, gaugeData.current, gaugeData.ceil, gaugeData.color);
 		}
 		
 		private function getGaugeData(gaugeId:int):GaugeData
