@@ -82,7 +82,6 @@ package ui
 			switch(target)
 			{
 				case tx_jauge:
-					var contextMenu:Array = composeContextMenu();
 					modContextMenu.createContextMenu(composeContextMenu());
 					
 					break;
