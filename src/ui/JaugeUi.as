@@ -167,8 +167,8 @@ package ui
 			}
 			
 			var selectedGaugeId:int = sysApi.getData(SELECTED_GAUGE_ID);
-			var selectedGaugeDatas:Array = recupDonnees(selectedGaugeId);
-			if (!selectedGaugeDatas["disabled"] && selectedGaugeDatas["visible"])
+			var selectedGaugeDatas:GaugeData = recupDonnees(selectedGaugeId);
+			if (!selectedGaugeDatas.disabled && selectedGaugeDatas.visible)
 			{
 				_affichageCourant = selectedGaugeId;
 			}
@@ -222,11 +222,11 @@ package ui
 					coche = true;
 				}
 				
-				var donnees:Array = recupDonnees(i);
+				var donnees:GaugeData = recupDonnees(i);
 				
-				if (donnees["visible"])
+				if (donnees.visible)
 				{
-					mainMenu.push(modContextMenu.createContextMenuItemObject(donnees["titre"], contextMenuCallback, new Array(1, i), donnees["disabled"], null, coche, true, composeTooltip(i)));
+					mainMenu.push(modContextMenu.createContextMenuItemObject(donnees.title, contextMenuCallback, new Array(1, i), donnees.disabled, null, coche, true, composeTooltip(i)));
 				}
 				donnees = null;
 				coche = false;
@@ -258,7 +258,7 @@ package ui
 		private function composeTooltip(idDonnee:int):String
 		{
 			//Génération du tooltip en fonction des préférences
-			var donnees:Array = recupDonnees(idDonnee);
+			var donnees:GaugeData = recupDonnees(idDonnee);
 			var donneesAff:Array = _affichageTooltip[idDonnee];
 			
 			var pourcentage:String;
@@ -268,10 +268,10 @@ package ui
 			
 			var retour:String = "";
 			
-			pourcentage = Math.floor((donnees['courant'] - donnees["plancher"]) / (donnees["plafond"] - donnees["plancher"]) * 100).toString();
-			restant = outilApi.kamasToString((donnees['plafond'] - donnees["plancher"]) - (donnees['courant'] - donnees['plancher']), "");
-			fait = outilApi.kamasToString(donnees['courant'] - donnees["plancher"], "");
-			max = outilApi.kamasToString(donnees["plafond"] - donnees['plancher'], "");
+			pourcentage = Math.floor((donnees.current - donnees.floor) / (donnees.ceil - donnees.floor) * 100).toString();
+			restant = outilApi.kamasToString((donnees.ceil - donnees.floor) - (donnees.current - donnees.floor), "");
+			fait = outilApi.kamasToString(donnees.current - donnees.floor, "");
+			max = outilApi.kamasToString(donnees.ceil - donnees.floor, "");
 			
 			if (donneesAff[0])
 			{
@@ -335,22 +335,14 @@ package ui
 		{
 			
 			//Lorsqu'un changement intervient, on récupére les données correspondantes et on les affiches
-			var donnees:Array = recupDonnees(_affichageCourant);
-			majJauge(donnees["plancher"], donnees["courant"], donnees["plafond"], donnees["couleur"]);
+			var donnees:GaugeData = recupDonnees(_affichageCourant);
+			majJauge(donnees.floor, donnees.current, donnees.ceil, donnees.color);
 		
 		}
 		
-		private function recupDonnees(idDonnees:int):Array
+		private function recupDonnees(idDonnees:int):GaugeData
 		{
-			
-			//On récupére les données demandées
-			var disabled:Boolean = new Boolean(true);
-			var visible:Boolean = new Boolean(false);
-			var titre:String = new String("");
-			var couleur:int = new int(0);
-			var plancher:Number = new int(0);
-			var courant:Number = new int(0);
-			var plafond:Number = new int(0);
+			var gaugeData:GaugeData = new GaugeData();
 			
 			var caract:Object = persoApi.characteristics();
 			
@@ -358,93 +350,93 @@ package ui
 			{
 				case ID_XP_CHARACTER:
 					
-					disabled = false;
-					visible = true;
-					titre = "Xp personnage";
-					couleur = 0;
+					gaugeData.disabled = false;
+					gaugeData.visible = true;
+					gaugeData.title= "Xp personnage";
+					gaugeData.color = 0;
 					
-					courant = caract.experience;
-					plancher = caract.experienceLevelFloor;
-					plafond = caract.experienceNextLevelFloor;
+					gaugeData.current = caract.experience;
+					gaugeData.floor = caract.experienceLevelFloor;
+					gaugeData.ceil = caract.experienceNextLevelFloor;
 					
 					break;
 				case ID_XP_GUILD:
 					
-					disabled = !socApi.hasGuild();
-					visible = true;
-					titre = "Xp guilde";
-					couleur = 1
+					gaugeData.disabled = !socApi.hasGuild();
+					gaugeData.visible = true;
+					gaugeData.title = "Xp guilde";
+					gaugeData.color = 1
 					
-					if (!disabled)
+					if (!gaugeData.disabled)
 					{
 						
 						var guilde:Object = socApi.getGuild();
 						
-						courant = guilde.experience;
-						plancher = guilde.expLevelFloor;
-						plafond = guilde.expNextLevelFloor;
+						gaugeData.current = guilde.experience;
+						gaugeData.floor = guilde.expLevelFloor;
+						gaugeData.ceil = guilde.expNextLevelFloor;
 					}
 					
 					break;
 				case ID_XP_MOUNT:
 					
-					disabled = persoApi.getMount() == null;
-					visible = true;
-					titre = "Xp monture";
-					couleur = 2;
+					gaugeData.disabled = persoApi.getMount() == null;
+					gaugeData.visible = true;
+					gaugeData.title = "Xp monture";
+					gaugeData.color = 2;
 					
-					if (!disabled)
+					if (!gaugeData.disabled)
 					{
 						
 						var monture:Object = persoApi.getMount();
 						
-						courant = monture.experience;
-						plancher = monture.experienceForLevel;
-						plafond = monture.experienceForNextLevel;
+						gaugeData.current = monture.experience;
+						gaugeData.floor = monture.experienceForLevel;
+						gaugeData.ceil = monture.experienceForNextLevel;
 					}
 					
 					break;
 				case ID_HONOUR:
 					
-					disabled = persoApi.getAlignmentSide() == 0;
-					visible = true;
-					titre = "Points d'honneur";
-					couleur = 3
+					gaugeData.disabled = persoApi.getAlignmentSide() == 0;
+					gaugeData.visible = true;
+					gaugeData.title = "Points d'honneur";
+					gaugeData.color = 3
 					
-					if (!disabled)
+					if (!gaugeData.disabled)
 					{
 						
 						var caractInfos:CharacterCharacteristicsInformations = fightApi.getCurrentPlayedCharacteristicsInformations();
 						var alignement:ActorExtendedAlignmentInformations = caractInfos.alignmentInfos;
 						
-						courant = alignement.honor;
-						plancher = alignement.honorGradeFloor;
-						plafond = alignement.honorNextGradeFloor;
+						gaugeData.current = alignement.honor;
+						gaugeData.floor = alignement.honorGradeFloor;
+						gaugeData.ceil = alignement.honorNextGradeFloor;
 					}
 					
 					break;
 				case ID_PODS:
 					
-					disabled = false;
-					visible = true;
-					titre = "Pods";
-					couleur = 4
+					gaugeData.disabled = false;
+					gaugeData.visible = true;
+					gaugeData.title = "Pods";
+					gaugeData.color = 4
 					
-					courant = persoApi.inventoryWeight();
-					plancher = 0;
-					plafond = persoApi.inventoryWeightMax();
+					gaugeData.current = persoApi.inventoryWeight();
+					gaugeData.floor = 0;
+					gaugeData.ceil = persoApi.inventoryWeightMax();
 					
 					break;
 				case ID_ENERGY:
 					
-					disabled = false;
-					visible = true;
-					titre = "Energie";
-					couleur = 5;
+					gaugeData.disabled = false;
+					gaugeData.visible = true;
+					gaugeData.title = "Energie";
+					gaugeData.color = 5;
 					
-					courant = caract.energyPoints;
-					plancher = 0;
-					plafond = caract.maxEnergyPoints;
+					gaugeData.current = caract.energyPoints;
+					gaugeData.floor = 0;
+					gaugeData.ceil = caract.maxEnergyPoints;
 					
 					break;
 				default: 
@@ -458,15 +450,15 @@ package ui
 						if (i + 6 == idDonnees)
 						{
 							
-							disabled = false;
-							visible = true;
-							titre = "Xp " + metierApi.getJobName(metier.jobDescription.jobId);
-							couleur = 5;
+							gaugeData.disabled = false;
+							gaugeData.visible = true;
+							gaugeData.title = "Xp " + metierApi.getJobName(metier.jobDescription.jobId);
+							gaugeData.color = 5;
 							
 							var xpMetier:JobExperience = metier.jobExperience;
-							courant = xpMetier.jobXP;
-							plancher = xpMetier.jobXpLevelFloor;
-							plafond = xpMetier.jobXpNextLevelFloor;
+							gaugeData.current = xpMetier.jobXP;
+							gaugeData.floor = xpMetier.jobXpLevelFloor;
+							gaugeData.ceil = xpMetier.jobXpNextLevelFloor;
 							nbMetier++;
 						}
 						i++;
@@ -474,19 +466,8 @@ package ui
 					
 					break;
 			}
-			//On balance tout ça dans un Array
-			var retour:Array = new Array();
 			
-			retour["disabled"] = disabled;
-			retour["visible"] = visible;
-			retour["titre"] = titre;
-			retour["couleur"] = couleur;
-			retour["courant"] = courant;
-			retour["plancher"] = plancher;
-			retour["plafond"] = plafond;
-			
-			return retour;
-		
+			return gaugeData;
 		}
 		
 		private function majJauge(plancher:Number, courant:Number, plafond:Number, couleur:int):void
@@ -508,4 +489,16 @@ package ui
 			tx_jauge.gotoAndStop = (taux + correctifCouleur).toString();
 		}
 	}
+	
+}
+
+class GaugeData
+{
+	public var disabled:Boolean = true;
+	public var visible:Boolean = false;
+	public var title:String = "";
+	public var color:int = 0;
+	public var floor:int = 0;
+	public var current:int = 0;
+	public var ceil:int = 0;
 }
