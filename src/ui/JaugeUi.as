@@ -166,9 +166,11 @@ package ui
 				sysApi.setData("JaugePlusTT", defaultTT);
 			}
 			
-			if (!recupDonnees(sysApi.getData(SELECTED_GAUGE_ID))["disabled"] && recupDonnees(sysApi.getData(SELECTED_GAUGE_ID))["visible"])
+			var selectedGaugeId:int = sysApi.getData(SELECTED_GAUGE_ID);
+			var selectedGaugeDatas:Array = recupDonnees(selectedGaugeId);
+			if (!selectedGaugeDatas["disabled"] && selectedGaugeDatas["visible"])
 			{
-				_affichageCourant = sysApi.getData(SELECTED_GAUGE_ID);
+				_affichageCourant = selectedGaugeId;
 			}
 			else
 			{
