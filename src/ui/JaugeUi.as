@@ -41,6 +41,21 @@ package ui
 		//::// Variables
 		//::///////////////////////////////////////////////////////////
 		
+		// Some constants
+		private static const ID_XP_CHARACTER:int = 0;
+		private static const ID_XP_GUILD:int = 1;
+		private static const ID_XP_MOUNT:int = 2;
+		private static const ID_HONOUR:int = 3;
+		private static const ID_PODS:int = 4;
+		private static const ID_ENERGY:int = 5;
+		private static const ID_JOB1:int = 6;
+		private static const ID_JOB2:int = 7;
+		private static const ID_JOB3:int = 8;
+		private static const ID_JOB4:int = 9;
+		private static const ID_JOB5:int = 10;
+		private static const ID_JOB6:int = 11;
+		private static const SELECTED_GAUGE_ID:String = "selectedGaugeId";
+		
 		// APIs
 		public var sysApi:SystemApi;
 		public var uiApi:UiApi;
@@ -124,36 +139,36 @@ package ui
 		private function init():void
 		{
 			//Récupération des préférences : si elles n'existent pas, on en établies par défaut.
-			if (sysApi.getData("JaugePlus") == null)
+			if (sysApi.getData(SELECTED_GAUGE_ID) == null)
 			{
-				sysApi.setData("JaugePlus", 0);
+				sysApi.setData(SELECTED_GAUGE_ID, 0);
 			}
 			
 			if (sysApi.getData("JaugePlusTT") == null)
 			{
 				var defaultTT:Array = new Array();
 				
-				defaultTT[0] = [true, true, false, false];
-				defaultTT[1] = [true, true, false, false];
-				defaultTT[2] = [true, true, false, false];
+				defaultTT[ID_XP_CHARACTER]	= [true, true, false, false];
+				defaultTT[ID_XP_GUILD]		= [true, true, false, false];
+				defaultTT[ID_XP_MOUNT]		= [true, true, false, false];
 				
-				defaultTT[3] = [true, true, false, false];
-				defaultTT[4] = [false, true, false, true];
-				defaultTT[5] = [false, true, false, true];
+				defaultTT[ID_HONOUR]	= [true, true, false, false];
+				defaultTT[ID_PODS]		= [false, true, false, true];
+				defaultTT[ID_ENERGY]	= [false, true, false, true];
 				
-				defaultTT[6] = [true, true, false, false];
-				defaultTT[7] = [true, true, false, false];
-				defaultTT[8] = [true, true, false, false];
-				defaultTT[9] = [true, true, false, false];
-				defaultTT[10] = [true, true, false, false];
-				defaultTT[11] = [true, true, false, false];
+				defaultTT[ID_JOB1] = [true, true, false, false];
+				defaultTT[ID_JOB2] = [true, true, false, false];
+				defaultTT[ID_JOB3] = [true, true, false, false];
+				defaultTT[ID_JOB4] = [true, true, false, false];
+				defaultTT[ID_JOB5] = [true, true, false, false];
+				defaultTT[ID_JOB6] = [true, true, false, false];
 				
 				sysApi.setData("JaugePlusTT", defaultTT);
 			}
 			
-			if (!recupDonnees(sysApi.getData("JaugePlus"))["disabled"] && recupDonnees(sysApi.getData("JaugePlus"))["visible"])
+			if (!recupDonnees(sysApi.getData(SELECTED_GAUGE_ID))["disabled"] && recupDonnees(sysApi.getData(SELECTED_GAUGE_ID))["visible"])
 			{
-				_affichageCourant = sysApi.getData("JaugePlus");
+				_affichageCourant = sysApi.getData(SELECTED_GAUGE_ID);
 			}
 			else
 			{
@@ -226,7 +241,7 @@ package ui
 			if (menu == 1)
 			{
 				
-				sysApi.setData("JaugePlus", item);
+				sysApi.setData(SELECTED_GAUGE_ID, item);
 				_affichageCourant = item;
 				onHook();
 			}
@@ -339,7 +354,7 @@ package ui
 			
 			switch (idDonnees)
 			{
-				case 0:
+				case ID_XP_CHARACTER:
 					
 					disabled = false;
 					visible = true;
@@ -351,7 +366,7 @@ package ui
 					plafond = caract.experienceNextLevelFloor;
 					
 					break;
-				case 1:
+				case ID_XP_GUILD:
 					
 					disabled = !socApi.hasGuild();
 					visible = true;
@@ -369,7 +384,7 @@ package ui
 					}
 					
 					break;
-				case 2:
+				case ID_XP_MOUNT:
 					
 					disabled = persoApi.getMount() == null;
 					visible = true;
@@ -387,7 +402,7 @@ package ui
 					}
 					
 					break;
-				case 3:
+				case ID_HONOUR:
 					
 					disabled = persoApi.getAlignmentSide() == 0;
 					visible = true;
@@ -406,7 +421,7 @@ package ui
 					}
 					
 					break;
-				case 4:
+				case ID_PODS:
 					
 					disabled = false;
 					visible = true;
@@ -418,7 +433,7 @@ package ui
 					plafond = persoApi.inventoryWeightMax();
 					
 					break;
-				case 5:
+				case ID_ENERGY:
 					
 					disabled = false;
 					visible = true;
