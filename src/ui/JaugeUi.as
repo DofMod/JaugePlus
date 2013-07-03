@@ -468,7 +468,7 @@ package ui
 			return gaugeData;
 		}
 		
-		private function displayGauge(floor:int, current:int, ceil:int, gaugeID:int):void
+		private function displayGauge(floor:Number, current:Number, ceil:Number, gaugeID:int):void
 		{
 			var frameIndex:int = 0;
 			
@@ -501,7 +501,7 @@ class GaugeData
 	public var visible:Boolean = false;
 	public var title:String = "";
 	public var gaugeID:int = 0;
-	public var floor:int = 0;
-	public var current:int = 0;
-	public var ceil:int = 0;
+	public var floor:Number = 0;
+	public var current:Number = 0;
+	public var ceil:Number = 0;
 }
