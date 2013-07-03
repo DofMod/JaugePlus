@@ -10,6 +10,7 @@ package ui
 	import d2api.UtilApi;
 	import d2components.Texture;
 	import d2data.KnownJob;
+	import d2enums.ComponentHookList;
 	import d2hooks.CharacterLevelUp;
 	import d2hooks.ContextChanged;
 	import d2hooks.GameFightEnd;
@@ -81,7 +82,6 @@ package ui
 			switch(target)
 			{
 				case tx_jauge:
-					//Génération et affichage du menu contextuel
 					var contextMenu:Array = composeContextMenu();
 					modContextMenu.createContextMenu(composeContextMenu());
 					
@@ -94,9 +94,13 @@ package ui
 			switch(target)
 			{
 				case tx_jauge:
-					//Génération et affichage du tooltip
 					uiApi.showTooltip(composeTooltip(_affichageCourant), tx_jauge, false);
 			}
+		}
+		
+		public function onRollOut(target:Object):void
+		{
+			uiApi.hideTooltip();
 		}
 		
 		//::///////////////////////////////////////////////////////////
@@ -156,7 +160,8 @@ package ui
 			sysApi.addHook(GuildLeft, onHook);
 			sysApi.addHook(ContextChanged, onHook);
 			
-			uiApi.addComponentHook(tx_jauge, "onRollOver");
+			uiApi.addComponentHook(tx_jauge, ComponentHookList.ON_ROLL_OVER);
+			uiApi.addComponentHook(tx_jauge, ComponentHookList.ON_ROLL_OUT);
 			uiApi.addComponentHook(tx_jauge, "onRightClick");
 			
 			onHook();
