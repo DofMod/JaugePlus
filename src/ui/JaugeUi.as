@@ -54,7 +54,12 @@ package ui
 		private static const ID_JOB4:int = 9;
 		private static const ID_JOB5:int = 10;
 		private static const ID_JOB6:int = 11;
+		private static const ID_PERCENT:int = 0;
+		private static const ID_REMAINING:int = 1;
+		private static const ID_DONE:int = 2;
+		private static const ID_MAXIMUM:int = 3;
 		private static const SELECTED_GAUGE_ID:String = "selectedGaugeId";
+		private static const INFOS_DISPLAYED:String = "infosDisplayed";
 		
 		// APIs
 		public var sysApi:SystemApi;
@@ -144,10 +149,11 @@ package ui
 				sysApi.setData(SELECTED_GAUGE_ID, 0);
 			}
 			
-			if (sysApi.getData("JaugePlusTT") == null)
+			if (sysApi.getData(INFOS_DISPLAYED) == null)
 			{
 				var defaultTT:Array = new Array();
 				
+				// ID_PERCENT, ID_REMAINING, ID_DONE, ID_MAXIMUM
 				defaultTT[ID_XP_CHARACTER]	= [true, true, false, false];
 				defaultTT[ID_XP_GUILD]		= [true, true, false, false];
 				defaultTT[ID_XP_MOUNT]		= [true, true, false, false];
@@ -163,7 +169,7 @@ package ui
 				defaultTT[ID_JOB5] = [true, true, false, false];
 				defaultTT[ID_JOB6] = [true, true, false, false];
 				
-				sysApi.setData("JaugePlusTT", defaultTT);
+				sysApi.setData(INFOS_DISPLAYED, defaultTT);
 			}
 			
 			var selectedGaugeId:int = sysApi.getData(SELECTED_GAUGE_ID);
@@ -176,7 +182,7 @@ package ui
 			{
 				_affichageCourant = 0;
 			}
-			_affichageTooltip = sysApi.getData("JaugePlusTT");
+			_affichageTooltip = sysApi.getData(INFOS_DISPLAYED);
 			
 			//Hooks résultants d'un changement d'une des information que l'on veut afficher
 			sysApi.addHook(GameFightEnd, onHook);
@@ -208,10 +214,10 @@ package ui
 			
 			paramMenu.push(modContextMenu.createContextMenuItemObject("Tooltip courante :", null, null, true, null, false, false));
 			paramMenu.push(modContextMenu.createContextMenuSeparatorObject());
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher pourcentage', contextMenuCallback, new Array(2, 0), false, null, _affichageTooltip[_affichageCourant][0], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher restant', contextMenuCallback, new Array(2, 1), false, null, _affichageTooltip[_affichageCourant][1], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher effectué', contextMenuCallback, new Array(2, 2), false, null, _affichageTooltip[_affichageCourant][2], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher maximum', contextMenuCallback, new Array(2, 3), false, null, _affichageTooltip[_affichageCourant][3], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher pourcentage', contextMenuCallback, new Array(2, 0), false, null, _affichageTooltip[_affichageCourant][ID_PERCENT], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher restant', contextMenuCallback, new Array(2, 1), false, null, _affichageTooltip[_affichageCourant][ID_REMAINING], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher effectué', contextMenuCallback, new Array(2, 2), false, null, _affichageTooltip[_affichageCourant][ID_DONE], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher maximum', contextMenuCallback, new Array(2, 3), false, null, _affichageTooltip[_affichageCourant][ID_MAXIMUM], true));
 			mainMenu.push(modContextMenu.createContextMenuItemObject("Paramètres", null, null, false, paramMenu, false, true));
 			mainMenu.push(modContextMenu.createContextMenuSeparatorObject());
 			
@@ -251,7 +257,7 @@ package ui
 			else if (menu == 2)
 			{
 				_affichageTooltip[_affichageCourant][item] = !_affichageTooltip[_affichageCourant][item];
-				sysApi.setData("JaugePlusTT", _affichageTooltip);
+				sysApi.setData(INFOS_DISPLAYED, _affichageTooltip);
 			}
 		}
 		
