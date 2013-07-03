@@ -54,11 +54,12 @@ package ui
 		[Module(name="Ankama_ContextMenu")]
 		public var modContextMenu:Object;
 		
-		// Componentns
+		// Components
 		public var tx_jauge:Texture;
 		
-		public var affichageCourant:int;
-		public var affichageTooltip:Array = new Array();
+		// Some globals
+		private var _affichageCourant:int;
+		private var _affichageTooltip:Array = new Array();
 		
 		//::///////////////////////////////////////////////////////////
 		//::// Public methods
@@ -94,7 +95,7 @@ package ui
 			{
 				case tx_jauge:
 					//Génération et affichage du tooltip
-					uiApi.showTooltip(composeTooltip(affichageCourant), tx_jauge, false);
+					uiApi.showTooltip(composeTooltip(_affichageCourant), tx_jauge, false);
 			}
 		}
 		
@@ -134,13 +135,13 @@ package ui
 			
 			if (!recupDonnees(sysApi.getData("JaugePlus"))["disabled"] && recupDonnees(sysApi.getData("JaugePlus"))["visible"])
 			{
-				affichageCourant = sysApi.getData("JaugePlus");
+				_affichageCourant = sysApi.getData("JaugePlus");
 			}
 			else
 			{
-				affichageCourant = 0;
+				_affichageCourant = 0;
 			}
-			affichageTooltip = sysApi.getData("JaugePlusTT");
+			_affichageTooltip = sysApi.getData("JaugePlusTT");
 			
 			//Hooks résultants d'un changement d'une des information que l'on veut afficher
 			sysApi.addHook(GameFightEnd, onHook);
@@ -171,16 +172,16 @@ package ui
 			
 			paramMenu.push(modContextMenu.createContextMenuItemObject("Tooltip courante :", null, null, true, null, false, false));
 			paramMenu.push(modContextMenu.createContextMenuSeparatorObject());
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher pourcentage', contextMenuCallback, new Array(2, 0), false, null, affichageTooltip[affichageCourant][0], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher restant', contextMenuCallback, new Array(2, 1), false, null, affichageTooltip[affichageCourant][1], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher effectué', contextMenuCallback, new Array(2, 2), false, null, affichageTooltip[affichageCourant][2], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher maximum', contextMenuCallback, new Array(2, 3), false, null, affichageTooltip[affichageCourant][3], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher pourcentage', contextMenuCallback, new Array(2, 0), false, null, _affichageTooltip[_affichageCourant][0], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher restant', contextMenuCallback, new Array(2, 1), false, null, _affichageTooltip[_affichageCourant][1], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher effectué', contextMenuCallback, new Array(2, 2), false, null, _affichageTooltip[_affichageCourant][2], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher maximum', contextMenuCallback, new Array(2, 3), false, null, _affichageTooltip[_affichageCourant][3], true));
 			mainMenu.push(modContextMenu.createContextMenuItemObject("Paramètres", null, null, false, paramMenu, false, true));
 			mainMenu.push(modContextMenu.createContextMenuSeparatorObject());
 			
 			while (i != 13)
 			{
-				if (i == affichageCourant)
+				if (i == _affichageCourant)
 				{
 					coche = true;
 				}
@@ -207,14 +208,14 @@ package ui
 			{
 				
 				sysApi.setData("JaugePlus", item);
-				affichageCourant = item;
+				_affichageCourant = item;
 				onHook();
 			}
 			//Si un item de param a été cliqué :
 			else if (menu == 2)
 			{
-				affichageTooltip[affichageCourant][item] = !affichageTooltip[affichageCourant][item];
-				sysApi.setData("JaugePlusTT", affichageTooltip);
+				_affichageTooltip[_affichageCourant][item] = !_affichageTooltip[_affichageCourant][item];
+				sysApi.setData("JaugePlusTT", _affichageTooltip);
 			}
 		}
 		
@@ -222,7 +223,7 @@ package ui
 		{
 			//Génération du tooltip en fonction des préférences
 			var donnees:Array = recupDonnees(idDonnee);
-			var donneesAff:Array = affichageTooltip[idDonnee];
+			var donneesAff:Array = _affichageTooltip[idDonnee];
 			
 			var pourcentage:String;
 			var restant:String;
@@ -298,7 +299,7 @@ package ui
 		{
 			
 			//Lorsqu'un changement intervient, on récupére les données correspondantes et on les affiches
-			var donnees:Array = recupDonnees(affichageCourant);
+			var donnees:Array = recupDonnees(_affichageCourant);
 			majJauge(donnees["plancher"], donnees["courant"], donnees["plafond"], donnees["couleur"]);
 		
 		}
