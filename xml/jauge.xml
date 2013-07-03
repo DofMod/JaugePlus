@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Definition>
-	
+
 	<Constants>
-		<!-- Enregistrement des chemins vers les assets d'interface et les css pour les textes -->
 		<Constant name="assets" value="[config.ui.skin]assets.swf|" />
-       	<Constant name="css" value="[config.ui.skin]css/" />
+		<Constant name="css" value="[config.ui.skin]css/" />
+	</Constants>
 
-   	</Constants>
-
-
-	<!-- Conteneur principal, il permet de placer l'interface à l'endroit souhaité -->
+	<!-- Main container, used to place the interface -->
 	<Container>
 		<Anchors>
 			<Anchor>
-				<AbsDimension x="551" y="663" />
+				<AbsDimension x="551"
+							  y="663" />
 			</Anchor>
 		</Anchors>
-		
-			<Texture name="jauge"><!--on met un nom pour pouvoitr l'utiliser en AS -->
-				<Anchors>
-					<Anchor>
-						<AbsDimension x="20" y="20" />
-					</Anchor>
-				</Anchors>
-	            <Size>
-	                <AbsDimension x="130" y="130" />
-	            </Size>
-				<uri>[local.assets]banner_tx_XPFrame</uri>
-			</Texture> 
-			
-			
+
+		<Texture name="jauge">
+			<Anchors>
+				<Anchor>
+					<AbsDimension x="20"
+								  y="20" />
+				</Anchor>
+			</Anchors>
+			<Size>
+				<AbsDimension x="130"
+							  y="130" />
+			</Size>
+
+			<uri>[local.assets]banner_tx_XPFrame</uri>
+		</Texture>
 	</Container>
 </Definition>
