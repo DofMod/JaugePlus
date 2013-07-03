@@ -342,7 +342,7 @@ package ui
 		{
 			var gaugeData:GaugeData = getGaugeData(_selectedGauge);
 			
-			majJauge(gaugeData.floor, gaugeData.current, gaugeData.ceil, gaugeData.color);
+			displayGauge(gaugeData.floor, gaugeData.current, gaugeData.ceil, gaugeData.color);
 		}
 		
 		private function getGaugeData(gaugeId:int):GaugeData
@@ -467,26 +467,32 @@ package ui
 			return gaugeData;
 		}
 		
-		private function majJauge(plancher:Number, courant:Number, plafond:Number, couleur:int):void
+		private function displayGauge(floor:int, current:int, ceil:int, color:int):void
 		{
-			//On met à jour la jauge avec les données fournies
-			var taux:int = 0;
-			var correctifCouleur:int = 0;
-			
-			taux = Math.floor(Math.min(((courant - plancher) / (plafond - plancher)) * 100, 100));
-			
-			if (taux == 0)
+			if (color < 0 || color > 7)
 			{
-				correctifCouleur = 0;
+				color = 1;
+			}
+			
+			var frameIndex:int = 0;
+			var colorFrameIndex:int = Math.min(color * 100, 500);
+			
+			if (current <= floor)
+			{
+				frameIndex = 0;
+			}
+			else if (current >= ceil || ceil == floor)
+			{
+				frameIndex = 100;
 			}
 			else
 			{
-				correctifCouleur = Math.min(couleur * 100, 500);
+				frameIndex = Math.floor(Math.min(((current - floor) / (ceil - floor)) * 100, 100));
 			}
-			tx_jauge.gotoAndStop = (taux + correctifCouleur).toString();
+			
+			tx_jauge.gotoAndStop = (colorFrameIndex + frameIndex).toString();
 		}
 	}
-	
 }
 
 class GaugeData
