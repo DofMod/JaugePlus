@@ -79,8 +79,8 @@ package ui
 		public var tx_jauge:Texture;
 		
 		// Some globals
-		private var _affichageCourant:int;
-		private var _affichageTooltip:Array = new Array();
+		private var _selectedGauge:int;
+		private var _infosDisplayed:Array = new Array();
 		
 		//::///////////////////////////////////////////////////////////
 		//::// Public methods
@@ -123,7 +123,7 @@ package ui
 			switch(target)
 			{
 				case tx_jauge:
-					uiApi.showTooltip(composeTooltip(_affichageCourant), tx_jauge, false);
+					uiApi.showTooltip(composeTooltip(_selectedGauge), tx_jauge, false);
 			}
 		}
 		
@@ -151,38 +151,39 @@ package ui
 			
 			if (sysApi.getData(INFOS_DISPLAYED) == null)
 			{
-				var defaultTT:Array = new Array();
+				// [ID_PERCENT, ID_REMAINING, ID_DONE, ID_MAXIMUM]
+				_infosDisplayed[ID_XP_CHARACTER]	= [true, true, false, false];
+				_infosDisplayed[ID_XP_GUILD]		= [true, true, false, false];
+				_infosDisplayed[ID_XP_MOUNT]		= [true, true, false, false];
 				
-				// ID_PERCENT, ID_REMAINING, ID_DONE, ID_MAXIMUM
-				defaultTT[ID_XP_CHARACTER]	= [true, true, false, false];
-				defaultTT[ID_XP_GUILD]		= [true, true, false, false];
-				defaultTT[ID_XP_MOUNT]		= [true, true, false, false];
+				_infosDisplayed[ID_HONOUR]	= [true, true, false, false];
+				_infosDisplayed[ID_PODS]		= [false, true, false, true];
+				_infosDisplayed[ID_ENERGY]	= [false, true, false, true];
 				
-				defaultTT[ID_HONOUR]	= [true, true, false, false];
-				defaultTT[ID_PODS]		= [false, true, false, true];
-				defaultTT[ID_ENERGY]	= [false, true, false, true];
+				_infosDisplayed[ID_JOB1] = [true, true, false, false];
+				_infosDisplayed[ID_JOB2] = [true, true, false, false];
+				_infosDisplayed[ID_JOB3] = [true, true, false, false];
+				_infosDisplayed[ID_JOB4] = [true, true, false, false];
+				_infosDisplayed[ID_JOB5] = [true, true, false, false];
+				_infosDisplayed[ID_JOB6] = [true, true, false, false];
 				
-				defaultTT[ID_JOB1] = [true, true, false, false];
-				defaultTT[ID_JOB2] = [true, true, false, false];
-				defaultTT[ID_JOB3] = [true, true, false, false];
-				defaultTT[ID_JOB4] = [true, true, false, false];
-				defaultTT[ID_JOB5] = [true, true, false, false];
-				defaultTT[ID_JOB6] = [true, true, false, false];
-				
-				sysApi.setData(INFOS_DISPLAYED, defaultTT);
+				sysApi.setData(INFOS_DISPLAYED, _infosDisplayed);
+			}
+			else
+			{
+				_infosDisplayed = sysApi.getData(INFOS_DISPLAYED);
 			}
 			
 			var selectedGaugeId:int = sysApi.getData(SELECTED_GAUGE_ID);
 			var selectedGaugeDatas:GaugeData = recupDonnees(selectedGaugeId);
 			if (!selectedGaugeDatas.disabled && selectedGaugeDatas.visible)
 			{
-				_affichageCourant = selectedGaugeId;
+				_selectedGauge = selectedGaugeId;
 			}
 			else
 			{
-				_affichageCourant = 0;
+				_selectedGauge = 0;
 			}
-			_affichageTooltip = sysApi.getData(INFOS_DISPLAYED);
 			
 			//Hooks résultants d'un changement d'une des information que l'on veut afficher
 			sysApi.addHook(GameFightEnd, onHook);
@@ -214,16 +215,16 @@ package ui
 			
 			paramMenu.push(modContextMenu.createContextMenuItemObject("Tooltip courante :", null, null, true, null, false, false));
 			paramMenu.push(modContextMenu.createContextMenuSeparatorObject());
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher pourcentage', contextMenuCallback, new Array(2, 0), false, null, _affichageTooltip[_affichageCourant][ID_PERCENT], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher restant', contextMenuCallback, new Array(2, 1), false, null, _affichageTooltip[_affichageCourant][ID_REMAINING], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher effectué', contextMenuCallback, new Array(2, 2), false, null, _affichageTooltip[_affichageCourant][ID_DONE], true));
-			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher maximum', contextMenuCallback, new Array(2, 3), false, null, _affichageTooltip[_affichageCourant][ID_MAXIMUM], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher pourcentage', contextMenuCallback, new Array(2, 0), false, null, _infosDisplayed[_selectedGauge][ID_PERCENT], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher restant', contextMenuCallback, new Array(2, 1), false, null, _infosDisplayed[_selectedGauge][ID_REMAINING], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher effectué', contextMenuCallback, new Array(2, 2), false, null, _infosDisplayed[_selectedGauge][ID_DONE], true));
+			paramMenu.push(modContextMenu.createContextMenuItemObject('Afficher maximum', contextMenuCallback, new Array(2, 3), false, null, _infosDisplayed[_selectedGauge][ID_MAXIMUM], true));
 			mainMenu.push(modContextMenu.createContextMenuItemObject("Paramètres", null, null, false, paramMenu, false, true));
 			mainMenu.push(modContextMenu.createContextMenuSeparatorObject());
 			
 			while (i != 13)
 			{
-				if (i == _affichageCourant)
+				if (i == _selectedGauge)
 				{
 					coche = true;
 				}
@@ -250,14 +251,14 @@ package ui
 			{
 				
 				sysApi.setData(SELECTED_GAUGE_ID, item);
-				_affichageCourant = item;
+				_selectedGauge = item;
 				onHook();
 			}
 			//Si un item de param a été cliqué :
 			else if (menu == 2)
 			{
-				_affichageTooltip[_affichageCourant][item] = !_affichageTooltip[_affichageCourant][item];
-				sysApi.setData(INFOS_DISPLAYED, _affichageTooltip);
+				_infosDisplayed[_selectedGauge][item] = !_infosDisplayed[_selectedGauge][item];
+				sysApi.setData(INFOS_DISPLAYED, _infosDisplayed);
 			}
 		}
 		
@@ -265,7 +266,7 @@ package ui
 		{
 			//Génération du tooltip en fonction des préférences
 			var donnees:GaugeData = recupDonnees(idDonnee);
-			var donneesAff:Array = _affichageTooltip[idDonnee];
+			var donneesAff:Array = _infosDisplayed[idDonnee];
 			
 			var pourcentage:String;
 			var restant:String;
@@ -341,7 +342,7 @@ package ui
 		{
 			
 			//Lorsqu'un changement intervient, on récupére les données correspondantes et on les affiches
-			var donnees:GaugeData = recupDonnees(_affichageCourant);
+			var donnees:GaugeData = recupDonnees(_selectedGauge);
 			majJauge(donnees.floor, donnees.current, donnees.ceil, donnees.color);
 		
 		}
