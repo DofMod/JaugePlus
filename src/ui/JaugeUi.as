@@ -269,79 +269,73 @@ package ui
 			}
 		}
 		
-		private function composeTooltip(idDonnee:int):String
+		private function composeTooltip(gaugeId:int):String
 		{
 			//Génération du tooltip en fonction des préférences
-			var donnees:GaugeData = getGaugeData(idDonnee);
-			var donneesAff:Array = _infosDisplayed[idDonnee];
+			var gaugeData:GaugeData = getGaugeData(gaugeId);
+			var infosDisplayed:Array = _infosDisplayed[gaugeId];
 			
-			var pourcentage:String;
-			var restant:String;
-			var fait:String;
-			var max:String;
+			var percentage:String	= Math.floor((gaugeData.current - gaugeData.floor) / (gaugeData.ceil - gaugeData.floor) * 100).toString();
+			var remaining:String	= outilApi.kamasToString((gaugeData.ceil - gaugeData.floor) - (gaugeData.current - gaugeData.floor), "");
+			var done:String			= outilApi.kamasToString(gaugeData.current - gaugeData.floor, "");
+			var maximum:String		= outilApi.kamasToString(gaugeData.ceil - gaugeData.floor, "");
 			
-			var retour:String = "";
-			
-			pourcentage = Math.floor((donnees.current - donnees.floor) / (donnees.ceil - donnees.floor) * 100).toString();
-			restant = outilApi.kamasToString((donnees.ceil - donnees.floor) - (donnees.current - donnees.floor), "");
-			fait = outilApi.kamasToString(donnees.current - donnees.floor, "");
-			max = outilApi.kamasToString(donnees.ceil - donnees.floor, "");
-			
-			if (donneesAff[0])
+			var tooltipText:String = "";
+			if (infosDisplayed[ID_PERCENT])
 			{
-				retour += pourcentage + "%";
-				if (donneesAff[3] || donneesAff[1] || donneesAff[2])
+				tooltipText += percentage + "%";
+				
+				if (infosDisplayed[ID_MAXIMUM] || infosDisplayed[ID_REMAINING] || infosDisplayed[ID_DONE])
 				{
-					retour += ", ";
+					tooltipText += ", ";
 				}
 			}
-			if (donneesAff[1])
+			
+			if (infosDisplayed[ID_REMAINING])
 			{
-				retour += restant + " restant";
-				if (donneesAff[2])
+				tooltipText += remaining + " restant";
+				
+				if (infosDisplayed[ID_DONE])
 				{
-					retour += ", ";
+					tooltipText += ", ";
 				}
 				else
 				{
-					retour += " ";
+					tooltipText += " ";
 				}
 			}
-			if (donneesAff[2])
+			
+			if (infosDisplayed[ID_DONE])
 			{
-				var suffix:String = "";
-				if (idDonnee == 4)
+				if (gaugeId == ID_ENERGY)
 				{
-					suffix = " utilisés";
+					tooltipText = done + " dispo";
 				}
-				else if (idDonnee == 5)
+				else if (gaugeId == ID_PODS)
 				{
-					suffix = " dispo";
+					tooltipText += done + " utilisés";
 				}
-				if (idDonnee == 5 || idDonnee == 4)
+				else if (infosDisplayed[ID_REMAINING])
 				{
-					fait += suffix;
+					tooltipText += done + " effectués";
 				}
-				else if (donneesAff[1])
-				{
-					fait += " effectués";
-				}
-				retour += fait + " ";
+				
+				tooltipText += " ";
 			}
-			if (donneesAff[3])
+			
+			if (infosDisplayed[ID_MAXIMUM])
 			{
-				if (donneesAff[0] || donneesAff[1] || donneesAff[2])
+				if (infosDisplayed[ID_PERCENT] || infosDisplayed[ID_REMAINING] || infosDisplayed[ID_DONE])
 				{
-					max = "sur " + max;
+					tooltipText += "sur " + maximum;
 				}
 				else
 				{
-					max += " max";
+					tooltipText += maximum + " max";
 				}
-				retour += max + " ";
 			}
 			
-			return retour;
+			return tooltipText;
 		
 		}
 		
