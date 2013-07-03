@@ -55,7 +55,7 @@ package ui
 		public var modContextMenu:Object;
 		
 		// Componentns
-		public var jauge:Texture;
+		public var tx_jauge:Texture;
 		
 		public var affichageCourant:int;
 		public var affichageTooltip:Array = new Array();
@@ -79,7 +79,7 @@ package ui
 		{
 			switch(target)
 			{
-				case jauge:
+				case tx_jauge:
 					//Génération et affichage du menu contextuel
 					var contextMenu:Array = composeContextMenu();
 					modContextMenu.createContextMenu(composeContextMenu());
@@ -92,9 +92,9 @@ package ui
 		{
 			switch(target)
 			{
-				case jauge:
+				case tx_jauge:
 					//Génération et affichage du tooltip
-					uiApi.showTooltip(composeTooltip(affichageCourant), jauge, false);
+					uiApi.showTooltip(composeTooltip(affichageCourant), tx_jauge, false);
 			}
 		}
 		
@@ -155,8 +155,8 @@ package ui
 			sysApi.addHook(GuildLeft, onHook);
 			sysApi.addHook(ContextChanged, onHook);
 			
-			uiApi.addComponentHook(jauge, "onRollOver");
-			uiApi.addComponentHook(jauge, "onRightClick");
+			uiApi.addComponentHook(tx_jauge, "onRollOver");
+			uiApi.addComponentHook(tx_jauge, "onRightClick");
 			
 			onHook();
 		}
@@ -468,7 +468,7 @@ package ui
 			{
 				correctifCouleur = Math.min(couleur * 100, 500);
 			}
-			jauge.gotoAndStop = (taux + correctifCouleur).toString();
+			tx_jauge.gotoAndStop = (taux + correctifCouleur).toString();
 		}
 	}
 }
