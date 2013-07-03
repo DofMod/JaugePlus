@@ -60,6 +60,14 @@ package ui
 		private static const ID_MAXIMUM:int = 3;
 		private static const SELECTED_GAUGE_ID:String = "selectedGaugeId";
 		private static const INFOS_DISPLAYED:String = "infosDisplayed";
+		private static const XP_GAUGE:uint = 0;
+		private static const GUILD_GAUGE:uint = 1;
+		private static const MOUNT_GAUGE:uint = 2;
+		private static const INCARNATION_GAUGE:uint = 3;
+		private static const HONOUR_GAUGE:uint = 4;
+		private static const POD_GAUGE:uint = 5;
+		private static const JOB_GAUGE:uint = 6;
+		private static const NB_GAUGE:uint = 6;
 		
 		// APIs
 		public var sysApi:SystemApi;
@@ -342,7 +350,7 @@ package ui
 		{
 			var gaugeData:GaugeData = getGaugeData(_selectedGauge);
 			
-			displayGauge(gaugeData.floor, gaugeData.current, gaugeData.ceil, gaugeData.color);
+			displayGauge(gaugeData.floor, gaugeData.current, gaugeData.ceil, gaugeData.gaugeID);
 		}
 		
 		private function getGaugeData(gaugeId:int):GaugeData
@@ -358,7 +366,7 @@ package ui
 					gaugeData.disabled = false;
 					gaugeData.visible = true;
 					gaugeData.title= "Xp personnage";
-					gaugeData.color = 0;
+					gaugeData.gaugeID = XP_GAUGE;
 					
 					gaugeData.current = characteristics.experience;
 					gaugeData.floor = characteristics.experienceLevelFloor;
@@ -370,7 +378,7 @@ package ui
 					gaugeData.disabled = !socApi.hasGuild();
 					gaugeData.visible = true;
 					gaugeData.title = "Xp guilde";
-					gaugeData.color = 1
+					gaugeData.gaugeID = GUILD_GAUGE;
 					
 					if (!gaugeData.disabled)
 					{
@@ -387,7 +395,7 @@ package ui
 					gaugeData.disabled = persoApi.getMount() == null;
 					gaugeData.visible = true;
 					gaugeData.title = "Xp monture";
-					gaugeData.color = 2;
+					gaugeData.gaugeID = MOUNT_GAUGE;
 					
 					if (!gaugeData.disabled)
 					{
@@ -404,7 +412,7 @@ package ui
 					gaugeData.disabled = persoApi.getAlignmentSide() == 0;
 					gaugeData.visible = true;
 					gaugeData.title = "Points d'honneur";
-					gaugeData.color = 3
+					gaugeData.gaugeID = HONOUR_GAUGE;
 					
 					if (!gaugeData.disabled)
 					{
@@ -419,7 +427,7 @@ package ui
 					gaugeData.disabled = false;
 					gaugeData.visible = true;
 					gaugeData.title = "Pods";
-					gaugeData.color = 4
+					gaugeData.gaugeID = POD_GAUGE;
 					
 					gaugeData.current = persoApi.inventoryWeight();
 					gaugeData.floor = 0;
@@ -431,7 +439,7 @@ package ui
 					gaugeData.disabled = false;
 					gaugeData.visible = true;
 					gaugeData.title = "Energie";
-					gaugeData.color = 5;
+					gaugeData.gaugeID = XP_GAUGE;
 					
 					gaugeData.current = characteristics.energyPoints;
 					gaugeData.floor = 0;
@@ -449,7 +457,7 @@ package ui
 							gaugeData.disabled = false;
 							gaugeData.visible = true;
 							gaugeData.title = "Xp " + metierApi.getJobName(job.jobDescription.jobId);
-							gaugeData.color = 5;
+							gaugeData.gaugeID = JOB_GAUGE;
 							
 							var jobExperience:JobExperience = job.jobExperience;
 							
@@ -467,15 +475,9 @@ package ui
 			return gaugeData;
 		}
 		
-		private function displayGauge(floor:int, current:int, ceil:int, color:int):void
+		private function displayGauge(floor:int, current:int, ceil:int, gaugeID:int):void
 		{
-			if (color < 0 || color > 7)
-			{
-				color = 1;
-			}
-			
 			var frameIndex:int = 0;
-			var colorFrameIndex:int = Math.min(color * 100, 500);
 			
 			if (current <= floor)
 			{
@@ -490,7 +492,12 @@ package ui
 				frameIndex = Math.floor(Math.min(((current - floor) / (ceil - floor)) * 100, 100));
 			}
 			
-			tx_jauge.gotoAndStop = (colorFrameIndex + frameIndex).toString();
+			if (gaugeID < 0 || gaugeID > NB_GAUGE)
+			{
+				gaugeID = XP_GAUGE;
+			}
+			
+			tx_jauge.gotoAndStop = (gaugeID * 100 + frameIndex);
 		}
 	}
 }
@@ -500,7 +507,7 @@ class GaugeData
 	public var disabled:Boolean = true;
 	public var visible:Boolean = false;
 	public var title:String = "";
-	public var color:int = 0;
+	public var gaugeID:int = 0;
 	public var floor:int = 0;
 	public var current:int = 0;
 	public var ceil:int = 0;
