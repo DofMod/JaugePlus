@@ -77,6 +77,11 @@ package ui
 		//::// Events
 		//::///////////////////////////////////////////////////////////
 		
+		/**
+		 * Hook reporting a right click.
+		 * 
+		 * @param	target	The target of the right click.
+		 */
 		public function onRightClick(target:Object):void
 		{
 			switch(target)
@@ -88,6 +93,11 @@ package ui
 			}
 		}
 		
+		/**
+		 * Hook reporting a roll over.
+		 * 
+		 * @param	target	The target of the roll over.
+		 */
 		public function onRollOver(target:Object):void
 		{
 			switch(target)
@@ -97,6 +107,11 @@ package ui
 			}
 		}
 		
+		/**
+		 * Hook reporting a roll out.
+		 * 
+		 * @param	target	The target of the roll out.
+		 */
 		public function onRollOut(target:Object):void
 		{
 			uiApi.hideTooltip();
