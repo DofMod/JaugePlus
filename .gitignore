@@ -1,0 +1,7 @@
+obj/
+*.png
+*.swf
+*.lxml
+*.as3proj
+*.py
+*.lnk
