@@ -104,7 +104,6 @@ package ui
 		
 		public function main(params:Object):void
 		{
-			sysApi.log(8, "ui loaded");
 			//Délai pour s'assurer du chargement de toutes les API
 			setTimeout(init, 500);
 		}
