@@ -11,6 +11,7 @@ package ui
 	import d2components.Texture;
 	import d2data.KnownJob;
 	import d2enums.ComponentHookList;
+	import d2enums.LocationEnum;
 	import d2hooks.CharacterLevelUp;
 	import d2hooks.ContextChanged;
 	import d2hooks.GameFightEnd;
@@ -138,7 +139,10 @@ package ui
 			switch(target)
 			{
 				case tx_jauge:
-					uiApi.showTooltip(composeTooltip(_selectedGauge), tx_jauge, false);
+					var tooltip:Object = uiApi.textTooltipInfo(composeTooltip(_selectedGauge));
+					uiApi.showTooltip(tooltip, target, false, "standard", LocationEnum.POINT_BOTTOM, LocationEnum.POINT_TOP, 11, null, null, null, "TextInfo");
+					
+					break;
 			}
 		}
 		
