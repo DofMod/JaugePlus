@@ -7,6 +7,10 @@ Ce module ajoute une jauge au médaillon central.
 
 !["Menu du module"](http://imageshack.us/a/img16/1984/bak4.png "Menu du module")
 
+Une vidéo de présentation du module est visualisable sur la chaine Youtube [DofusModules](https://www.youtube.com/user/dofusModules "Youtube, DofusModules"):
+
+[Lien vers la vidéo](https://www.youtube.com/watch?v=I1LjENsZTHM "Vidéo de présentation du module")
+
 Download + Compile:
 -------------------
 
