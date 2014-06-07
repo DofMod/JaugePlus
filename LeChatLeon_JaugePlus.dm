@@ -9,7 +9,7 @@
         <!-- Dernière version de dofus pour laquelle ce module fonctionne -->
         <dofusVersion>2.3.5</dofusVersion>
         <!-- Auteur du module -->
-        <author>Le Chat Léon</author>
+        <author>LeChatLeon</author>
         <!-- Courte description -->
         <shortDescription>Ce module ajoute une deuxième jauge personnalisable au cadran central.</shortDescription>
         <!-- Description détaillée -->
