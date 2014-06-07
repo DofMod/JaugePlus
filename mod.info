@@ -1,0 +1,13 @@
+[
+{
+    "name": "${name}",
+    "author": "${author}",
+    "contributors": ${contributors},
+    "url": "https://github.com/DofMod/${name}/releases/download/${tag}/${filename}.zip",
+    "description": "This module add a new gauge in your main interface",
+    "category": "Information",
+    "version": "${version}",
+    "dofusVersion": "${dofusVersion}",
+    "lastUpdateDate": "${date}"
+}
+]

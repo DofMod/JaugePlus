@@ -1,0 +1,13 @@
+[
+{
+    "name": "JaugePlus",
+    "author": "LeChat",
+    "contributors": ["Relena"],
+    "url": "https://github.com/DofMod/JaugePlus/releases/download/v2.11_1.0/JaugePlus_2.11_1.0.zip",
+    "description": "This module add a new gauge in your main interface",
+    "category": "Information",
+    "version": "1.0",
+    "dofusVersion": "2.11",
+    "lastUpdateDate": "2013-07-04"
+}
+]
