@@ -13,7 +13,7 @@ import sys
 verbose = False
 
 moduleName = "JaugePlus"
-authorName = "LeChat"
+authorName = "LeChatLeon"
 contributorsName = ["Relena"]
 
 srcPath = "."
